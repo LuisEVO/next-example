@@ -9,8 +9,8 @@ import Typography from '@mui/material/Typography';
 import InputAdornment from '@mui/material/InputAdornment';
 
 const Home: NextPage = () => {
-  const [investmentAmount, setInvestmentAmount] = useState<number>(10_000);
-  const [interestRate, setInterestRate] = useState<number>(0.1);
+  const [investmentAmount, setInvestmentAmount] = useState<string>(String(10000));
+  const [interestRate, setInterestRate] = useState<string>(String(0.1));
   const [investmentYears, setInvestmentYears] = useState<string>(String(1));
   const [totalInvestment, setTotalInvestment] = useState<number>(0);
   const [totalProfit, setTotalProfit] = useState<number>(0);
@@ -19,13 +19,13 @@ const Home: NextPage = () => {
   const calculate = (e: React.SyntheticEvent) => {
     e.preventDefault();
 
-    let _total = investmentAmount;
+    let _total = +investmentAmount;
     let _totalInvestment = 0;
     
     for (let index = 0; index < +investmentYears; index++) {
-      _total += (_total * interestRate);
-      if (index > 0) _total += investmentAmount;
-      _totalInvestment += investmentAmount;
+      _total += (_total * +interestRate);
+      if (index > 0) _total += +investmentAmount;
+      _totalInvestment += +investmentAmount;
     }
 
     setTotal(_total);
@@ -72,7 +72,7 @@ const Home: NextPage = () => {
             variant='outlined'
             type='number'
             value={investmentAmount}
-            onChange={(e) => setInvestmentAmount(+e.target.value)}
+            onChange={(e) => setInvestmentAmount(e.target.value)}
             InputProps={{
               startAdornment: <InputAdornment position="start">$</InputAdornment>,
             }}
@@ -82,8 +82,8 @@ const Home: NextPage = () => {
             label='Interés Anual'
             variant='outlined'
             type='number'
-            value={interestRate * 100}
-            onChange={(e) => setInterestRate(+e.target.value / 100)}
+            value={interestRate ? (+interestRate * 100) : ''}
+            onChange={(e) => setInterestRate(e.target.value ? String(+e.target.value / 100) : '')}
             InputProps={{
               startAdornment: <InputAdornment position="start">%</InputAdornment>,
             }}
