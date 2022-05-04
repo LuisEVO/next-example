@@ -12,19 +12,23 @@ const Home: NextPage = () => {
   const [investmentAmount, setInvestmentAmount] = useState<string>(String(10000));
   const [interestRate, setInterestRate] = useState<string>(String(0.1));
   const [investmentYears, setInvestmentYears] = useState<string>(String(1));
+  const [cryptoExchangeCommission, setCryptoExchangeCommission] = useState<string>(String(0.016));
   const [totalInvestment, setTotalInvestment] = useState<number>(0);
   const [totalProfit, setTotalProfit] = useState<number>(0);
   const [total, setTotal] = useState<number>(0);
+  
 
   const calculate = (e: React.SyntheticEvent) => {
     e.preventDefault();
 
-    let _total = +investmentAmount;
+    let _investmentAmountWithoutExchangeCommision = +investmentAmount - (+investmentAmount * +cryptoExchangeCommission)
+    let _total = _investmentAmountWithoutExchangeCommision;
+
     let _totalInvestment = 0;
     
     for (let index = 0; index < +investmentYears; index++) {
       _total += (_total * +interestRate);
-      if (index > 0) _total += +investmentAmount;
+      if (index > 0) _total += _investmentAmountWithoutExchangeCommision;
       _totalInvestment += +investmentAmount;
     }
 
@@ -82,8 +86,19 @@ const Home: NextPage = () => {
             label='Interés Anual'
             variant='outlined'
             type='number'
-            value={interestRate ? Math.round(+interestRate * 100) : ''}
-            onChange={(e) => setInterestRate(e.target.value ? String(+e.target.value / 100) : '')}
+            value={interestRate || ''}
+            onChange={(e) => setInterestRate(e.target.value || '')}
+            InputProps={{
+              startAdornment: <InputAdornment position="start">%</InputAdornment>,
+            }}
+          />
+          <TextField
+            id='outlined-basic'
+            label='Comisión conversión de Crypto'
+            variant='outlined'
+            type='number'
+            value={cryptoExchangeCommission || ''}
+            onChange={(e) => setCryptoExchangeCommission(e.target.value || '')}
             InputProps={{
               startAdornment: <InputAdornment position="start">%</InputAdornment>,
             }}
