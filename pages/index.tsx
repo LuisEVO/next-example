@@ -13,6 +13,7 @@ const Home: NextPage = () => {
   const [interestRate, setInterestRate] = useState<string>(String(0.1));
   const [investmentYears, setInvestmentYears] = useState<string>(String(1));
   const [cryptoExchangeCommission, setCryptoExchangeCommission] = useState<string>(String(0.016));
+  const [totalCommission, setTotalCommission] = useState<number>(0);
   const [totalInvestment, setTotalInvestment] = useState<number>(0);
   const [totalProfit, setTotalProfit] = useState<number>(0);
   const [total, setTotal] = useState<number>(0);
@@ -21,19 +22,23 @@ const Home: NextPage = () => {
   const calculate = (e: React.SyntheticEvent) => {
     e.preventDefault();
 
-    let _investmentAmountWithoutExchangeCommision = +investmentAmount - (+investmentAmount * +cryptoExchangeCommission)
+    let _cryptoExchangeCommission = (+investmentAmount * +cryptoExchangeCommission);
+    let _investmentAmountWithoutExchangeCommision = +investmentAmount - _cryptoExchangeCommission;
     let _total = _investmentAmountWithoutExchangeCommision;
 
     let _totalInvestment = 0;
+    let _totalComission = 0;
     
     for (let index = 0; index < +investmentYears; index++) {
       _total += (_total * +interestRate);
       if (index > 0) _total += _investmentAmountWithoutExchangeCommision;
       _totalInvestment += +investmentAmount;
+      _totalComission += +_cryptoExchangeCommission;
     }
 
     setTotal(_total);
     setTotalInvestment(_totalInvestment);
+    setTotalCommission(_totalComission);
     setTotalProfit(_total - _totalInvestment);
   };
 
@@ -125,10 +130,14 @@ const Home: NextPage = () => {
           <Typography variant='body1' component='p'>
             Inversión total: $ {totalInvestment}
           </Typography>
+
+          <Typography variant='body1' component='p'>
+            Comisión total: $ {totalCommission}
+          </Typography>
+
           <Typography variant='body1' component='p'>
             Ganacia total: $ {totalProfit}
           </Typography>
-
           <Typography variant='body1' component='p'>
             Total: $ {total}
           </Typography>
