@@ -82,7 +82,7 @@ const Home: NextPage = () => {
             label='Interés Anual'
             variant='outlined'
             type='number'
-            value={interestRate ? (+interestRate * 100) : ''}
+            value={interestRate ? Math.round(+interestRate * 100) : ''}
             onChange={(e) => setInterestRate(e.target.value ? String(+e.target.value / 100) : '')}
             InputProps={{
               startAdornment: <InputAdornment position="start">%</InputAdornment>,
